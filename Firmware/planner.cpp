@@ -716,8 +716,10 @@ void plan_buffer_line(float x, float y, float z, const float &e, float feed_rate
   target[X_AXIS] = lround(x*axis_steps_per_unit[X_AXIS]);
   target[Y_AXIS] = lround(y*axis_steps_per_unit[Y_AXIS]);
 #ifdef MESH_BED_LEVELING
-    if (mbl.active){
-        target[Z_AXIS] = lround((z+mbl.get_z(x, y))*axis_steps_per_unit[Z_AXIS]);
+    if (mbl.active && (z < 1.2f)){
+        target[Z_AXIS] =
+            (1.0f -z) * lround((z+mbl.get_z(x, y))*axis_steps_per_unit[Z_AXIS]) +
+            z * lround(z*axis_steps_per_unit[Z_AXIS]);
     }else{
         target[Z_AXIS] = lround(z*axis_steps_per_unit[Z_AXIS]);
     }
